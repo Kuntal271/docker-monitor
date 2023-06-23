@@ -9,6 +9,9 @@ import (
 	"html/template"
 	"net/http"
 	"fmt"
+	"log"
+	"goMonitoring/src"
+	"encoding/json"
 )
 
 const (
@@ -17,7 +20,7 @@ const (
 
 type PageData struct {
 	Title string
-	Body string
+	Body interface{}
 	CurrentRoute string
 }
 
@@ -38,6 +41,8 @@ func serveStaticFiles() {
 	http.Handle("/pages/", http.StripPrefix("/pages/", pages))
 }
 
+
+
 func main() {	
 
 	pages := []string{
@@ -51,22 +56,32 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		data := PageData {
 			Title: "Monitoring",
-			Body: "Test",
+			Body: "",
 			CurrentRoute: "/",
 		}
 		renderTemplateWithContent(w, data, pages...)
+	})
+
+	http.HandleFunc("/cpuUsage", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		response, err := json.Marshal(src.CPUData(false))
+		if err != nil {
+			log.Fatal(err)
+		}
+		w.Write(response)
 	})
 
 	//container route
 	http.HandleFunc("/container", func(w http.ResponseWriter, r *http.Request) {
 		data := PageData {
 			Title: "Monitoring",
-			Body: "Test",
+			Body: src.ContainerData(),
 			CurrentRoute: "/container",
 		}
 		renderTemplateWithContent(w, data, pages...)
 	})
 
+	//network route
 	http.HandleFunc("/network", func(w http.ResponseWriter, r *http.Request) {
 		data := PageData {
 			Title: "Monitoring",
