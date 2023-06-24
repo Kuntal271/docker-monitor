@@ -6,12 +6,12 @@
 package main
 
 import (
-	"html/template"
-	"net/http"
-	"fmt"
-	"log"
-	"goMonitoring/src"
 	"encoding/json"
+	"fmt"
+	"goMonitoring/src"
+	"html/template"
+	"log"
+	"net/http"
 )
 
 const (
@@ -19,13 +19,13 @@ const (
 )
 
 type PageData struct {
-	Title string
-	Body interface{}
+	Title        string
+	Body         interface{}
 	CurrentRoute string
 }
 
 type CpuData struct {
-	CpuUsage float64
+	CpuUsage      float64
 	VirtualMemory float64
 }
 
@@ -46,22 +46,20 @@ func serveStaticFiles() {
 	http.Handle("/pages/", http.StripPrefix("/pages/", pages))
 }
 
-
-
-func main() {	
+func main() {
 
 	pages := []string{
-		"web/index.html", 
-		"web/pages/cpu.html", 
+		"web/index.html",
+		"web/pages/cpu.html",
 		"web/pages/container.html",
 		"web/pages/network.html",
 	}
 
 	//default route
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		data := PageData {
-			Title: "Monitoring",
-			Body: "",
+		data := PageData{
+			Title:        "Monitoring",
+			Body:         "",
 			CurrentRoute: "/",
 		}
 		renderTemplateWithContent(w, data, pages...)
@@ -79,9 +77,9 @@ func main() {
 
 	//container route
 	http.HandleFunc("/container", func(w http.ResponseWriter, r *http.Request) {
-		data := PageData {
-			Title: "Monitoring",
-			Body: src.ContainerData(),
+		data := PageData{
+			Title:        "Monitoring",
+			Body:         src.ContainerData(),
 			CurrentRoute: "/container",
 		}
 		renderTemplateWithContent(w, data, pages...)
@@ -89,9 +87,9 @@ func main() {
 
 	//network route
 	http.HandleFunc("/network", func(w http.ResponseWriter, r *http.Request) {
-		data := PageData {
-			Title: "Monitoring",
-			Body: "Test",
+		data := PageData{
+			Title:        "Monitoring",
+			Body:         "Test",
 			CurrentRoute: "/network",
 		}
 		renderTemplateWithContent(w, data, pages...)
@@ -101,7 +99,7 @@ func main() {
 	serveStaticFiles()
 
 	fmt.Println("starting webserver on port " + port)
-	http.ListenAndServe(":" + port, nil)
+	http.ListenAndServe(":"+port, nil)
 }
 
 func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
@@ -119,7 +117,7 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 	}
 }
 
-func renderTemplateWithContent(w http.ResponseWriter,data interface{}, content ...string) {
+func renderTemplateWithContent(w http.ResponseWriter, data interface{}, content ...string) {
 	t, err := template.ParseFiles(content...)
 
 	if err != nil {
