@@ -12,6 +12,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"time"
 )
 
 const (
@@ -90,7 +91,9 @@ func main() {
 				src.StopContainer(containerId)
 			}
 		}
-		
+
+		time.Sleep(time.Second)
+
 		//get pagedata
 		data := PageData{
 			Title:        "Monitoring",
