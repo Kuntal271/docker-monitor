@@ -78,7 +78,7 @@ func main() {
 
 	//container route
 	http.HandleFunc("/container", func(w http.ResponseWriter, r *http.Request) {
-		
+
 		//get url param
 		urlParam := r.URL.Query()
 		if urlParam["action"] != nil {
@@ -90,10 +90,9 @@ func main() {
 			} else {
 				src.StopContainer(containerId)
 			}
-			
+
 			time.Sleep(time.Second)
 		}
-
 
 		//get pagedata
 		data := PageData{
@@ -138,9 +137,6 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 
 func renderTemplateWithContent(w http.ResponseWriter, data interface{}, function func(interface{}) interface{}, content ...string) {
 	t, err := template.ParseFiles(content...)
-
-
-
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
